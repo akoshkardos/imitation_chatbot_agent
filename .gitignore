@@ -1,0 +1,39 @@
+# .gitignore
+
+# === Environment variables ===
+.env                    
+
+# === Python ===
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.whl
+.venv/
+venv/
+ENV/
+env/
+
+# === IDE ===
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# === Data ===
+data/*.txt
+data/*.json
+data/*.csv
+!data/.gitkeep
+
+# === Vector database ===
+chroma_db/
+*.chroma

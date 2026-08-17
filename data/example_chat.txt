@@ -1,0 +1,3 @@
+# Bijvoorbeeld:
+Jij: Hallo, hoe gaat het?
+Vriend: Hey! Goed hoor, en met jou?

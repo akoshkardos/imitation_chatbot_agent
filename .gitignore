@@ -32,7 +32,7 @@ env/
 data/*.txt
 data/*.json
 data/*.csv
-!data/.gitkeep
+!data/example_chat.txt
 
 # === Vector database ===
 chroma_db/

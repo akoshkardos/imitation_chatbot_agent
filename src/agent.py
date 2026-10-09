@@ -14,7 +14,13 @@ from src.config import (
     MODEL_NAME,
     TEMPERATURE,
     MAX_TOKENS,
+    MAX_RANDOM_CHECKS,
+    RANDOM_SESSIONS_PER_CHECK,
 )
+
+if not OPENAI_API_KEY:
+    raise ValueError("OPENAI_API_KEY not found in .env file")
+
 try:
     from src.prompts import SYSTEM_PROMPT
 except ModuleNotFoundError as error:
@@ -27,9 +33,6 @@ from src.tools import (
     search_sessions_bm25,
 )
 
-
-MAX_RANDOM_CHECKS = 3
-RANDOM_SESSIONS_PER_CHECK = 3
 
 _EMOJI_BASE = r"[\U0001F000-\U0001FAFF\u2600-\u27BF\u2300-\u23FF\u2B00-\u2BFF\u3030\u303D\u3297\u3299]"
 _EMOJI_PATTERN = re.compile(

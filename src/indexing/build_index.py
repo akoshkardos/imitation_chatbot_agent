@@ -4,10 +4,15 @@ import json
 from pathlib import Path
 
 from src.data import group_into_sessions, parse_whatsapp_chat, sessions_to_documents
+from src.config import SESSION_GAP_MINUTES
 from src.indexing.vector_store import add_to_vector_store
 
 
-def build_index(chat_file: Path, persist_directory: Path, gap_minutes: int = 180):
+def build_index(
+    chat_file: Path,
+    persist_directory: Path,
+    gap_minutes: int = SESSION_GAP_MINUTES,
+):
     messages = parse_whatsapp_chat(chat_file)
     sessions = group_into_sessions(messages, gap_minutes=gap_minutes)
     documents = sessions_to_documents(sessions, source=chat_file.stem)

@@ -6,12 +6,14 @@ from datetime import datetime, timedelta
 
 from langchain_core.documents import Document
 
+from src.config import SESSION_GAP_MINUTES
+
 
 TIMESTAMP_FORMAT = "%d-%m-%Y, %H:%M:%S"
 
 
 def group_into_sessions(
-    messages: list[dict[str, str]], gap_minutes: int = 180
+    messages: list[dict[str, str]], gap_minutes: int = SESSION_GAP_MINUTES
 ) -> list[list[dict[str, object]]]:
     """Sort messages by timestamp and group gaps over ``gap_minutes``."""
     if gap_minutes < 0:

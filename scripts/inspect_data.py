@@ -6,10 +6,11 @@ import argparse
 from collections import Counter
 from pathlib import Path
 
+from src.config import SESSION_GAP_MINUTES
 from src.data import group_into_sessions, parse_whatsapp_chat
 
 
-def inspect(path: Path, gap_minutes: int = 180) -> None:
+def inspect(path: Path, gap_minutes: int = SESSION_GAP_MINUTES) -> None:
     messages = parse_whatsapp_chat(path)
     sessions = group_into_sessions(messages, gap_minutes=gap_minutes)
     senders = Counter(message["sender"] for message in messages)
@@ -35,7 +36,7 @@ def inspect(path: Path, gap_minutes: int = 180) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("chat_file", type=Path, help="WhatsApp .txt export")
-    parser.add_argument("--gap-minutes", type=int, default=180)
+    parser.add_argument("--gap-minutes", type=int, default=SESSION_GAP_MINUTES)
     args = parser.parse_args()
     inspect(args.chat_file, args.gap_minutes)
 

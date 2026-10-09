@@ -1,12 +1,21 @@
 # WhatsApp Imitation Agent
 
-A small conversational agent that uses a WhatsApp chat export as context for answering in a selected participant's style. It indexes chat sessions in Chroma for semantic retrieval and saves a BM25 corpus for lexical retrieval. LangGraph combines both retrieval paths with a drafting and review step.
+This is a personal passion project: an impersonator chatbot built to help me learn about vector RAG, agentic AI, and prompt engineering. It uses a WhatsApp chat export as context and attempts to reply in the style of a selected participant. It does not fine-tune a model.
 
-The repository includes a made-up English group chat and a public example prompt for **Taylor**. The example files let you try the workflow without a personal chat export. Your own chat, API key, and private prompt should stay local.
+The current parser handles WhatsApp text exports in English or Dutch, including private and group chats that use the supported timestamp format. The repository includes a synthetic English group chat with three participants so you can try the pipeline without using a personal export.
+
+## How it works
+
+1. The parser reads WhatsApp messages and skips system notices. It converts omitted attachment markers, such as “image omitted” and “afbeelding weggelaten,” into placeholders.
+2. Messages are sorted and grouped into sessions. A gap longer than `SESSION_GAP_MINUTES` starts a new session. Each session becomes a document containing the messages and metadata.
+3. The index builder writes the session documents to a local Chroma database for semantic search. It also saves the documents as `chroma_db/bm25_documents.json`; the BM25 retriever uses that file for lexical keyword search. Both retrieval methods search sessions, and both are run for each agent response.
+4. The LangGraph workflow plans a semantic query and keywords, retrieves relevant sessions through Chroma and BM25, drafts a reply, and retrieves random sessions as style examples. A review step can request another random sample if it thinks one may help. `MAX_RANDOM_CHECKS` sets the loop limit. The agent then returns its final message.
+
+The chat history is kept in memory for the current running process and conversation thread. It is not added to the index, saved as long-term memory, or retained after the process ends.
 
 ## Setup
 
-Create and activate the Conda environment, then make a local environment file:
+Create and activate the Conda environment, then make your local `.env` file:
 
 ```bash
 conda env create -f environment.yml
@@ -14,58 +23,89 @@ conda activate imitation_agent
 cp .env.example .env
 ```
 
-Edit `.env` and set `OPENAI_API_KEY`. You can also change `IMPERSONATED_NAME` and the model and chunk settings there. Do not commit `.env`.
+Add your OpenAI API key to `.env`. The example configuration uses Taylor as the impersonated participant. Change `IMPERSONATED_NAME` to the sender name used in your chat. The agent loads your local `src/prompts.py` if present; otherwise, it uses the public `src/prompts_example.py`.
 
-## Build the index
+## Add a chat and build the index
 
-Build the default local Chroma database and BM25 corpus from the included sample chat:
+Put a WhatsApp `.txt` export in `data/`, then build the Chroma database and BM25 JSON file:
+
+```bash
+python -m scripts.build_index data/my_chat.txt
+```
+
+The included sample can be indexed with:
 
 ```bash
 python -m scripts.build_index data/example_chat.txt
 ```
 
-For a personal export, pass its path instead. WhatsApp exports are expected to be plain text in the format handled by `src/data/whatsapp_parser.py`. Keep personal exports under `data/`; they are ignored by Git except for `data/example_chat.txt`.
-
-Indexing sends chat text to the configured OpenAI embedding API. Only index conversations you are allowed to process and share with that service. The index is written to the local, Git-ignored `chroma_db/` directory.
+Indexing calls the configured OpenAI embedding model and writes the database and BM25 corpus under `chroma_db/`. The database is local and ignored by Git. Only process chats you have permission to use; message text is sent to the configured embedding API during indexing and may be sent to the chat model as retrieved context during agent use.
 
 ## Run the agent
 
-After building an index:
+After building the index, start the chat loop:
 
 ```bash
 python -m src.agent
 ```
 
-Enter a message at the prompt. Type `exit` to stop. The agent needs the API key and a built local index. It uses `src/prompts_example.py` when the private `src/prompts.py` is absent, as it will be for a GitHub clone.
+Type `exit` to stop. The agent needs a valid API key and a built index.
 
-To use a private prompt locally, create `src/prompts.py`; that path is ignored by Git. Set its `SYSTEM_PROMPT` value to your prompt. The target name is read from `IMPERSONATED_NAME` in `.env`.
+## Inspect, test, and evaluate
 
-## Inspect, evaluate, and test
-
-Inspect an export without printing message contents:
+Inspect a chat export without printing message contents:
 
 ```bash
-python -m scripts.inspect_data data/example_chat.txt
+python -m scripts.inspect_data data/my_chat.txt
 ```
 
-Run the example evaluation cases:
-
-```bash
-python -m src.evaluation.run_eval
-```
-
-The command uses `evals/questions.jsonl` if you have a local private set; otherwise it falls back to the public `evals/questions.example.jsonl`. Evaluation calls the chat model and writes generated answers under the ignored `evals/results/` directory.
-
-Run the parser and session unit tests:
+Run the parser and session tests:
 
 ```bash
 python -m unittest discover -s tests
 ```
 
-## Notebook
+Run the evaluation cases:
 
-Open `notebooks/workflow_playground.ipynb` from this repository. It selects a local text export under `data/` if one is present; otherwise it uses the example chat. Index building, model calls, and tests are off by default. Enable the steps you want in notebook section 0, and build an index before running retrieval or the agent.
+```bash
+python -m src.evaluation.run_eval
+```
 
-## What is kept local
+This runs the agent on fixed questions and reports keyword coverage. It uses your local `evals/questions.jsonl` if present, or the public `evals/questions.example.jsonl` otherwise. These evaluations are a separate manual check; their scores are not part of the live agent workflow. Generated answers are written under the ignored `evals/results/` directory.
 
-Git ignores `.env`, `src/prompts.py`, personal chat and JSON exports under `data/`, the Chroma/BM25 index, private evaluation cases, and evaluation results. The tracked `.env.example`, `src/prompts_example.py`, `data/example_chat.txt`, and `evals/questions.example.jsonl` are safe starting points for a clone. Check `git status` before committing to confirm that no personal files are staged.
+## Notebook workflow
+
+Open `notebooks/workflow_playground.ipynb` and run the cells in order. The notebook selects a local `.txt` export under `data/` if one is present, otherwise it uses the included example chat. Indexing, model calls, and tests are off by default; enable the relevant flags in section 0. Build an index before running retrieval or the agent. The notebook is useful for inspecting parsed data, checking retrieval results, trying agent responses, and experimenting with prompts.
+
+## Configuration
+
+Put local settings in `.env`; `.env.example` lists the same variables with public defaults. `src/config.py` loads them for the Python code.
+
+| Variable | What it controls |
+| --- | --- |
+| `OPENAI_API_KEY` | API credential used by the chat and embedding models. |
+| `IMPERSONATED_NAME` | Target sender name, used in prompts and the terminal label. It should match the name in the export. |
+| `MODEL_NAME` | Chat model used for query planning, drafting, and reviewing. |
+| `EMBEDDING_MODEL` | Embedding model used to build and query Chroma. |
+| `TEMPERATURE` | Chat model response randomness. |
+| `MAX_TOKENS` | Maximum completion tokens for a model response. |
+| `SESSION_GAP_MINUTES` | Message time gap that separates sessions. |
+| `VECTOR_SEARCH_K` | Number of sessions returned by semantic search. |
+| `BM25_SEARCH_K` | Number of sessions returned by BM25 lexical search. |
+| `MAX_RANDOM_CHECKS` | Maximum number of times the review loop can request another random style sample. |
+| `RANDOM_SESSIONS_PER_CHECK` | Number of random sessions retrieved each time. |
+| `CHUNK_SIZE`, `CHUNK_OVERLAP` | Reserved settings; currently unused because indexing stores one document per session rather than splitting sessions into chunks. |
+
+## Prompt engineering
+
+The main system prompt is `SYSTEM_PROMPT` in `src/prompts.py`. That file is ignored by Git so you can keep a private local prompt. For a public clone, start from `src/prompts_example.py`; copy it to `src/prompts.py` for a local prompt, or edit the example prompt directly if you intend to publish your changes.
+
+There are also task-specific prompts in `src/agent.py`: the semantic query planner, BM25 keyword extraction, answer drafting instructions, and answer review instructions. Tool descriptions in `src/tools.py` guide how the model uses retrieval tools. These are useful places to experiment alongside the system prompt. The notebook supports manually trying agent responses and reviewing retrieval output.
+
+## Future work
+
+Possible next steps include support for more chat formats, such as Discord exports; additional retrieval tools; persistent memory across runs; and performance improvements. This version is a prototype focused on getting the parsing, retrieval, and agent workflow working end to end.
+
+## Privacy
+
+`.env`, `src/prompts.py`, personal chat exports under `data/`, the Chroma/BM25 index, private evaluation questions, and evaluation results are ignored by Git. The repository includes only the synthetic chat and example prompt/evaluation cases. Check `git status` before committing so you can confirm that personal files are not staged.

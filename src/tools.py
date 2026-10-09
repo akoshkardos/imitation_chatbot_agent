@@ -5,6 +5,7 @@ from langchain_community.retrievers import BM25Retriever
 from langchain_core.documents import Document
 from langchain_core.tools import tool
 
+from src.config import BM25_SEARCH_K, VECTOR_SEARCH_K
 from src.indexing.vector_store import DEFAULT_PERSIST_DIRECTORY, load_vector_store
 
 vector_store = load_vector_store()
@@ -17,7 +18,7 @@ if bm25_corpus_path.exists():
         for item in bm25_items
     ]
     bm25_retriever = (
-        BM25Retriever.from_documents(bm25_documents, k=5)
+        BM25Retriever.from_documents(bm25_documents, k=BM25_SEARCH_K)
         if bm25_documents
         else None
     )
@@ -51,7 +52,7 @@ def retrieve_relevant_sessions(query):
     can find relevant sessions, word only calls don't work well.
     """
     retriever = vector_store.as_retriever(
-        search_type="similarity", search_kwargs={"k": 4}
+        search_type="similarity", search_kwargs={"k": VECTOR_SEARCH_K}
     )
     docs = retriever.invoke(query)
 

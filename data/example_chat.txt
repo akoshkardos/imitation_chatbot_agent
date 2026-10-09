@@ -1,3 +1,39 @@
-# Bijvoorbeeld:
-Jij: Hallo, hoe gaat het?
-Vriend: Hey! Goed hoor, en met jou?
+[04-04-2025, 08:12:05] System: Messages and calls are end-to-end encrypted. Only people in this chat can read, listen to, or share them.
+[04-04-2025, 09:03:18] Morgan: Are we still doing the garden cleanup tomorrow?
+[04-04-2025, 09:04:02] Taylor: Yep! I can bring gloves and a couple of big bags
+[04-04-2025, 09:04:37] Casey: I have a small shovel if that helps
+[04-04-2025, 09:05:11] Morgan: Definitely, the flower bed is basically a tiny jungle now
+[04-04-2025, 09:06:28] Taylor: A very ambitious jungle 🌱
+[04-04-2025, 09:07:03] Casey: What time should we meet?
+[04-04-2025, 09:08:17] Taylor: Maybe 10? Gives us time to get coffee first
+[04-04-2025, 09:08:55] Morgan: Works for me
+[04-04-2025, 09:09:42] Casey: Same here, I'll bring pastries
+[04-04-2025, 09:10:06] Taylor: Casey has understood the assignment
+[04-04-2025, 09:11:13] Morgan: I'll bring coffee then
+[04-04-2025, 09:12:34] Casey: Look at us, a very organized team
+[04-04-2025, 09:13:05] Taylor: Don't jinx it yet haha
+[04-04-2025, 12:26:50] Morgan: I found the seed packets from last year. Some are probably too old though
+[04-04-2025, 12:28:09] Taylor: Send a picture of them and I'll check
+[04-04-2025, 12:29:22] Morgan: image omitted
+[04-04-2025, 12:30:03] Taylor: The tomato ones should be fine, not sure about the flowers
+[04-04-2025, 12:31:48] Casey: I can grab fresh flower seeds on my way
+[04-04-2025, 12:32:16] Taylor: Nice, something cheerful would be good 🌼
+[04-04-2025, 12:34:01] Morgan: Any preference?
+[04-04-2025, 12:35:27] Taylor: Maybe sunflowers? Hard to mess those up
+[04-04-2025, 12:36:08] Casey: Famous last words
+[04-04-2025, 12:37:44] Taylor: If they fail we'll call it an abstract garden
+[04-04-2025, 12:39:15] Morgan: That's the spirit
+[05-04-2025, 09:21:39] Casey: Running about five minutes late, sorry!
+[05-04-2025, 09:22:18] Taylor: No worries, we're just getting coffee
+[05-04-2025, 09:22:51] Morgan: I got your usual
+[05-04-2025, 09:23:32] Taylor: You are a hero 🙌
+[05-04-2025, 09:29:05] Casey: On my way now
+[05-04-2025, 13:48:27] Morgan: The garden looks so much better already
+[05-04-2025, 13:49:40] Casey: We did more than I thought we would
+[05-04-2025, 13:50:16] Taylor: And only one bag of weeds tried to escape
+[05-04-2025, 13:51:02] Morgan: I still don't know how that happened
+[05-04-2025, 13:52:35] Taylor: Teamwork, clearly
+[05-04-2025, 13:53:19] Casey: We should do this again when the sunflowers come up
+[05-04-2025, 13:54:03] Taylor: Deal. I'll bring snacks next time
+[05-04-2025, 13:54:46] Morgan: And I'll bring the coffee
+[05-04-2025, 13:55:22] Casey: I'll bring a better shovel 😄

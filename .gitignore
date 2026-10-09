@@ -2,6 +2,7 @@
 
 # === Environment variables ===
 .env                    
+/src/prompts.py
 
 # === Python ===
 __pycache__/
@@ -37,3 +38,7 @@ data/*.csv
 # === Vector database ===
 chroma_db/
 *.chroma
+
+# Evaluation outputs can contain generated personal data
+evals/results/
+/evals/questions.jsonl

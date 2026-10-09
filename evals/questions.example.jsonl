@@ -1,0 +1,3 @@
+{"question":"What time are we meeting for the garden cleanup?","expected_answer":"At 10.","expected_keywords":["10"]}
+{"question":"What should they do if the sunflowers fail?","expected_answer":"Call it an abstract garden.","expected_keywords":["abstract","garden"]}
+{"question":"What did Morgan get for Taylor before they started?","expected_answer":"Taylor's usual coffee.","expected_keywords":["coffee"]}

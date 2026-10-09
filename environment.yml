@@ -1,0 +1,37 @@
+name: imitation_agent
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+    # === Core LangChain ===
+    - langchain
+    - langchain-openai
+    - langchain-chroma
+    - langchain-community
+    - langgraph
+    
+    # === Vector Database ===
+    - chromadb
+    - rank_bm25
+    - overrides
+    
+    # === OpenAI ===
+    - openai
+    - tiktoken
+    
+    # === Utilities ===
+    - python-dotenv
+    - pandas
+    - numpy
+    
+    # === Document Loaders (voor later) ===
+    - pypdf
+    - unstructured
+    
+    # === Optional: voor mooie output ===
+    - rich
+    - notebook
+    - ipykernel
